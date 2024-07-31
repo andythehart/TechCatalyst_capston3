@@ -25,6 +25,7 @@ def create_spark_session(name: str) -> SparkSession:
         .appName(name) \
         .config("spark.hadoop.fs.s3a.access.key", access_key) \
         .config("spark.hadoop.fs.s3a.secret.key", secret_key) \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .getOrCreate()
     print("spark session created")
     return spark

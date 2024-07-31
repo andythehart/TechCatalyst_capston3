@@ -32,7 +32,11 @@ def process_yellow_taxi() -> DataFrame:
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", dayofweek(col(date_col))) \
         .withColumn("is_weekend", when(col("day_of_week").isin([1, 7]), True)
-                    .otherwise(False))
+                    .otherwise(False)) \
+        .withColumn("ehail_fee", lit(0)) \
+        .withColumn("trip_type", lit(-1)) \
+        .withColumnRenamed("tpep_dropoff_datetime", "dropoff_datetime") \
+        .withColumnRenamed("tpep_pickup_datetime", "pickup_datetime")
     return yellow_taxi_df
 
 
@@ -40,13 +44,13 @@ def process_green_taxi() -> DataFrame:
     """
     process the green taxi data
     """
-    date_col = "tpep_pickup_datetime"
+    date_col = "lpep_pickup_datetime"
     green_taxi_df = read_df(sess, GREEN_TAXI_URL)
     green_taxi_df = green_taxi_df.drop_duplicates() \
         .withColumn("taxi_type", lit("green")) \
         .withColumn("trip_duration",
-                    (unix_timestamp(col("tpep_dropoff_datetime"))
-                     - unix_timestamp(col("tpep_pickup_datetime"))) / 60) \
+                    (unix_timestamp(col("lpep_dropoff_datetime"))
+                     - unix_timestamp(col("lpep_pickup_datetime"))) / 60) \
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
@@ -54,7 +58,10 @@ def process_green_taxi() -> DataFrame:
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", dayofweek(col(date_col))) \
         .withColumn("is_weekend", when(col("day_of_week").isin([1, 7]), True)
-                    .otherwise(False))
+                    .otherwise(False)) \
+        .withColumn("Airport_fee", lit(0)) \
+        .withColumnRenamed("lpep_dropoff_datetime", "dropoff_datetime") \
+        .withColumnRenamed("lpep_pickup_datetime", "pickup_datetime")
     return green_taxi_df
 
 
