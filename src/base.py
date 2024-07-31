@@ -23,9 +23,10 @@ def create_spark_session(name: str) -> SparkSession:
     access_key, secret_key = read_aws_creds()
     spark = SparkSession.builder  \
         .appName(name) \
-        .config("fs.s3a.access.key", access_key) \
-        .config("fs.s3a.secret.key", secret_key) \
+        .config("spark.hadoop.fs.s3a.access.key", access_key) \
+        .config("spark.hadoop.fs.s3a.secret.key", secret_key) \
         .getOrCreate()
+    print("spark session created")
     return spark
 
 
@@ -33,6 +34,7 @@ def read_df(session: SparkSession, url: str) -> DataFrame:
     """
     read data into a spark dataframe
     """
+    print(f"reading df for: {url}")
     df = session.read.parquet(url)
     return df
 
@@ -41,4 +43,5 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     write a spark df to the target url
     """
+    print(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)

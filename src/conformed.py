@@ -84,7 +84,7 @@ if __name__ == '__main__':
     yellow = process_yellow_taxi()
     green = process_green_taxi()
     yellow_green = yellow.union(green)
-    write_df(yellow_green, CONFORMED_BUCKET, ["year", "month", "taxi_type"])
+    write_df(yellow_green, f"{CONFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
 
     hvfhv = process_hvfhv()
-    write_df(hvfhv, CONFORMED_BUCKET, ["year", "month", "day_of_month"])
+    write_df(hvfhv, f"{CONFORMED_BUCKET}/hvfhv", ["year", "month", "day_of_month"])
