@@ -5,7 +5,7 @@ from configparser import ConfigParser
 from pyspark.sql import SparkSession, DataFrame
 
 
-def read_aws_creds(path="aws.cfg") -> tuple(str, str):
+def read_aws_creds(path="aws.cfg") -> tuple[str, str]:
     """
     read in the aws credentials
     """
