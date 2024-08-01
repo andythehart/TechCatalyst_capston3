@@ -93,8 +93,8 @@ def process_yellow_taxi() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
-        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
-        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
+        .withColumns({'time': date_format(col(date_col), 'HH:mm:ss'), 'hour': date_format(col(date_col), 'HH')})\
+        .withColumn('timeofday', when(date_format(col(date_col), 'HH')<12, 'Morning').when(date_format(col(date_col), 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
@@ -122,8 +122,8 @@ def process_green_taxi() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
-        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
-        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
+        .withColumns({'time': date_format(col(date_col), 'HH:mm:ss'), 'hour': date_format(col(date_col), 'HH')})\
+        .withColumn('timeofday', when(date_format(col(date_col), 'HH')<12, 'Morning').when(date_format(col(date_col), 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
@@ -158,8 +158,8 @@ def process_hvfhv() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
-        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
-        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
+        .withColumns({'time': date_format(col(date_col), 'HH:mm:ss'), 'hour': date_format(col(date_col), 'HH')})\
+        .withColumn('timeofday', when(date_format(col(date_col), 'HH')<12, 'Morning').when(date_format(col(date_col), 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
@@ -174,5 +174,5 @@ if __name__ == '__main__':
     yellow_green = combine_yellow_green(yellow, green)
     write_df(yellow_green, f"{CONFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
 
-    hvfhv = process_hvfhv()
-    write_df(hvfhv, f"{CONFORMED_BUCKET}/hvfhv", ["year", "month", "day_of_month"])
+    #hvfhv = process_hvfhv()
+    #write_df(hvfhv, f"{CONFORMED_BUCKET}/hvfhv", ["year", "month", "day_of_month"])
