@@ -23,9 +23,8 @@ def create_spark_session(name: str) -> SparkSession:
     access_key, secret_key = read_aws_creds()
     spark = SparkSession.builder  \
         .appName(name) \
-        .config("spark.hadoop.fs.s3a.access.key", access_key) \
-        .config("spark.hadoop.fs.s3a.secret.key", secret_key) \
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config("fs.s3a.access.key", access_key) \
+        .config("fs.s3a.secret.key", secret_key) \
         .getOrCreate()
     print("spark session created")
     return spark

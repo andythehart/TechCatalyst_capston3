@@ -24,8 +24,8 @@ def create_spark_session(name: str) -> SparkSession:
     access_key, secret_key = read_aws_creds()
     spark = SparkSession.builder  \
         .appName(name) \
-        .config("spark.hadoop.fs.s3a.access.key", access_key) \
-        .config("spark.hadoop.fs.s3a.secret.key", secret_key) \
+        .config("fs.s3a.access.key", access_key) \
+        .config("fs.s3a.secret.key", secret_key) \
         .getOrCreate()
     print("spark session created")
     return spark
@@ -116,6 +116,7 @@ def process_hvfhv() -> DataFrame:
     hvfhv_df = read_df(sess, HVFHV_URL)
     hvfhv_df = hvfhv_df.drop_duplicates() \
         .withColumn("taxi_type", lit("hvhfv")) \
+        .withColumnRenamed("trip_miles", "trip_distance") \
         .withColumn("trip_duration",
                     (unix_timestamp(col("dropoff_datetime"))
                      - unix_timestamp(col("pickup_datetime"))) / 60) \
