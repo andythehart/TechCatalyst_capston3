@@ -15,6 +15,7 @@ AWS_SECRET_KEY = ""
 
 SNOWFLAKE_USER = ""
 SNOWFLAKE_PASSWORD = ""
+SNOWFLAKE_ROLE = ""
 SNOWFLAKE_ACCT = ""
 SNOWFLAKE_WAREHOUSE = ""
 SNOWFLAKE_DB = ""
@@ -49,7 +50,7 @@ def read_aws_creds(path="") -> tuple[str, str]:
     read in the aws credentials
     """
     # for databricks set your access key above
-    if len(path) != "":
+    if path != "":
         config = ConfigParser()
         config.read(path)
         access_key = config["AWS"]["ACCESS_KEY"]
@@ -95,13 +96,14 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
 
 
-def create_snowflake_connection(user: str, password: str, acct: str, warehouse: str, db: str, schema: str) -> SnowflakeConnection:
+def create_snowflake_connection(user: str, password: str, acct: str, warehouse: str, db: str, schema: str, role: str) -> SnowflakeConnection:
     """
     create a snowflake connection
     """
     conn = snowflake.connector.connect(
         user=user,
         password=password,
+        role=role,
         account=acct,
         warehouse=warehouse,
         database=db,
@@ -210,7 +212,8 @@ def process_yellow_green(sess: SparkSession) -> DataFrame:
 @timefunc
 def main():
     spark_sess = create_spark_session("End to End")
-    snow_conn = create_snowflake_connection()
+    snow_conn = create_snowflake_connection(SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DB, SNOWFLAKE_SCHEMA, SNOWFLAKE_ROLE)
+
     # conformed step
     yellow = process_yellow_taxi(spark_sess)
     green = process_green_taxi(spark_sess)
@@ -223,7 +226,7 @@ def main():
 
     # All data is now in the transformed bucket; time to move it to snowflake
     # this script assumes the tables already exist
-    
+ 
     # clean the table
     run_sql(snow_conn, "TRUNCATE TABLE capstone_de.group_3_schema.fact_green_yellow")
 
