@@ -9,7 +9,9 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth, date_format
 import snowflake.connector
 from snowflake.connector import SnowflakeConnection
-
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='log_file.log', encoding='utf-8', level=logging.INFO)
 # ****************************************************** User defined variables
 AWS_ACCESS_KEY = ""
 AWS_SECRET_KEY = ""
@@ -41,7 +43,7 @@ def timefunc(f: FunctionType):
         results = f(*args, **kwargs)
         time_end = time.time()
         total_time = time_end - time_start
-        print(f"function:{f.__name__} with args: {args}, {kwargs} took: {total_time}")
+        logger.info(f"function:{f.__name__} with args: {args}, {kwargs} took: {total_time}")
         return results
     return timed
 
@@ -74,7 +76,7 @@ def create_spark_session(name: str) -> SparkSession:
         .config("fs.s3a.access.key", access_key) \
         .config("fs.s3a.secret.key", secret_key) \
         .getOrCreate()
-    print("spark session created")
+    logger.info("spark session created")
     return spark
 
 
@@ -83,7 +85,7 @@ def read_df(session: SparkSession, url: str) -> DataFrame:
     """
     read data into a spark dataframe
     """
-    print(f"reading df for: {url}")
+    logger.info(f"reading df for: {url}")
     df = session.read.parquet(url)
     return df
 
@@ -93,10 +95,10 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     write a spark df to the target url
     """
-    print(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
+    logger.info(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
 
-
+@timefunc
 def create_snowflake_connection(user: str, password: str, acct: str, warehouse: str, db: str, schema: str, role: str) -> SnowflakeConnection:
     """
     create a snowflake connection
@@ -118,6 +120,7 @@ def run_sql(conn: SnowflakeConnection, sql: str):
     """
     run a sql statement
     """
+    logger.info("running sql: " + sql)
     conn.cursor().execute(sql)
 
 
@@ -126,6 +129,7 @@ def copy_into(conn: SnowflakeConnection, sql: str, aws_access_key: str, aws_secr
     """
     run copy into command
     """
+    logger.info("running copy into: " + sql)
     conn.cursor().execute(
         sql.format(
             aws_access_key_id=aws_access_key,
@@ -212,6 +216,7 @@ def process_yellow_green(sess: SparkSession) -> DataFrame:
 
 @timefunc
 def main():
+    logger.info("********** Start Job ***********")
     spark_sess = create_spark_session("End to End")
     snow_conn = create_snowflake_connection(SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DB, SNOWFLAKE_SCHEMA, SNOWFLAKE_ROLE)
 
@@ -227,7 +232,7 @@ def main():
 
     # All data is now in the transformed bucket; time to move it to snowflake
     # this script assumes the tables already exist
- 
+
     # clean the table
     run_sql(snow_conn, "TRUNCATE TABLE capstone_de.group_3_schema.fact_green_yellow")
 
@@ -238,6 +243,7 @@ def main():
     MATCH_BY_COLUMN_NAME='CASE_INSENSITIVE';
     """
     copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    logger.info("********** Finish Job ***********")
 
 
 if __name__ == '__main__':
