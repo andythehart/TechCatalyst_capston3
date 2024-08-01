@@ -97,7 +97,7 @@ def process_yellow_taxi() -> DataFrame:
         .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
-        .withColumn("day_of_week", dayofweek(col(date_col), 'EEE')) \
+        .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
         .withColumn("is_weekend", when(col("day_of_week").isin([1, 7]), True)
                     .otherwise(False)) \
         .withColumn("ehail_fee", lit(0)) \
@@ -126,7 +126,7 @@ def process_green_taxi() -> DataFrame:
         .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
-        .withColumn("day_of_week", dayofweek(col(date_col))) \
+        .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
         .withColumn("is_weekend", when(col("day_of_week").isin([1, 7]), True)
                     .otherwise(False)) \
         .withColumn("Airport_fee", lit(0))
@@ -162,7 +162,7 @@ def process_hvfhv() -> DataFrame:
         .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
-        .withColumn("day_of_week", dayofweek(col(date_col))) \
+        .withColumn("day_of_week", date_format(col(date_col), 'EEE')) \
         .withColumn("is_weekend", when(col("day_of_week").isin([1, 7]), True)
                     .otherwise(False))
     return hvfhv_df
