@@ -1,9 +1,52 @@
 """
 create the conformed data
 """
-from pyspark.sql import DataFrame
+from configparser import ConfigParser
+from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth
-from base import read_df, create_spark_session, write_df
+
+
+def read_aws_creds(path="aws.cfg") -> tuple[str, str]:
+    """
+    read in the aws credentials
+    """
+    config = ConfigParser()
+    config.read(path)
+    aws_access_key = config["AWS"]["ACCESS_KEY"]
+    aws_secret_key = config["AWS"]["SECRET_KEY"]
+    return aws_access_key, aws_secret_key
+
+
+def create_spark_session(name: str) -> SparkSession:
+    """
+    create a spark session
+    """
+    access_key, secret_key = read_aws_creds()
+    spark = SparkSession.builder  \
+        .appName(name) \
+        .config("spark.hadoop.fs.s3a.access.key", access_key) \
+        .config("spark.hadoop.fs.s3a.secret.key", secret_key) \
+        .getOrCreate()
+    print("spark session created")
+    return spark
+
+
+def read_df(session: SparkSession, url: str) -> DataFrame:
+    """
+    read data into a spark dataframe
+    """
+    print(f"reading df for: {url}")
+    df = session.read.parquet(url)
+    return df
+
+
+def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
+    """
+    write a spark df to the target url
+    """
+    print(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
+    df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
+
 
 RAW_BUCKET = "s3a://capstone-techcatalyst-raw"
 CONFORMED_BUCKET = "s3a://capstone-techcatalyst-conformed/group_3"
@@ -90,6 +133,7 @@ def process_hvfhv() -> DataFrame:
 if __name__ == '__main__':
     yellow = process_yellow_taxi()
     green = process_green_taxi()
+    green_reorder = green.select(*yellow.columns) # cheap way of reordering cols
     yellow_green = yellow.union(green)
     write_df(yellow_green, f"{CONFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
 
