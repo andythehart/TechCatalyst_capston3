@@ -5,7 +5,7 @@ from configparser import ConfigParser
 from types import FunctionType
 import time
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth
+from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth, date_format
 
 
 def timefunc(f: FunctionType):
@@ -91,6 +91,8 @@ def process_yellow_taxi() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
+        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
+        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", dayofweek(col(date_col))) \
@@ -118,6 +120,8 @@ def process_green_taxi() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
+        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
+        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", dayofweek(col(date_col))) \
@@ -154,6 +158,8 @@ def process_hvfhv() -> DataFrame:
         .withColumn("average_speed",
                     col('trip_distance') / (col('trip_duration') / 60)) \
         .withColumn("month", month(col(date_col))) \
+        .withColumns({'time': date_format(date_col, 'HH:mm:ss'), 'hour': date_format(col, 'HH')})\
+        .withColumn('timeofday', when(date_format(date_col, 'HH')<12, 'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening')) \
         .withColumn("day_of_month", dayofmonth(col(date_col))) \
         .withColumn("year", year(col(date_col))) \
         .withColumn("day_of_week", dayofweek(col(date_col))) \
