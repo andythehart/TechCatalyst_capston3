@@ -1,11 +1,11 @@
 USE DATABASE capstone_de;
-USE SCHEMA group_3_schema;
+USE SCHEMA capstone_de.group_3_schema;
 -- Dim tables
-CREATE TABLE dim_ratecode (
+CREATE TABLE capstone_de.group_3_schema.dim_ratecode (
     id INT,
     ratecode VARCHAR
 );
-INSERT INTO dim_ratecode (id, ratecode)
+INSERT INTO capstone_de.group_3_schema.dim_ratecode (id, ratecode)
 VALUES
 (1, 'Standard Rate'),
 (2, 'JFK'),
@@ -14,11 +14,11 @@ VALUES
 (5, 'Negotiated Fare'),
 (6, 'Group Ride');
 
-CREATE TABLE dim_payment_type (
+CREATE TABLE capstone_de.group_3_schema.dim_payment_type (
     id INT,
     payment_type VARCHAR
 );
-INSERT INTO dim_payment_type (id, payment_type)
+INSERT INTO capstone_de.group_3_schema.dim_payment_type (id, payment_type)
 VALUES
 (1, 'Credit Card'),
 (2, 'Cash'),
@@ -27,29 +27,29 @@ VALUES
 (5, 'Unknown'),
 (6, 'Voided Trip');
 
-CREATE TABLE dim_store_fwd_flag (
+CREATE TABLE capstone_de.group_3_schema.dim_store_fwd_flag (
     y_n VARCHAR,
     s VARCHAR
 );
-INSERT INTO dim_store_fwd_flag (y_n, s)
+INSERT INTO capstone_de.group_3_schema.dim_store_fwd_flag (y_n, s)
 VALUES
 ('Y', 'store and forward trip'),
 ('N', 'not a store and forward trip');
 
-CREATE TABLE dim_trip_type (
+CREATE TABLE capstone_de.group_3_schema.dim_trip_type (
     id INT,
     trip_type VARCHAR
 );
-INSERT INTO dim_trip_type (id, trip_type)
+INSERT INTO capstone_de.group_3_schema.dim_trip_type (id, trip_type)
 VALUES
 (1, 'Street-hail'),
 (2, 'Dispatch');
 
-CREATE TABLE dim_vendor_id (
+CREATE TABLE capstone_de.group_3_schema.dim_vendor_id (
     id INT,
     vendor VARCHAR
 );
-INSERT INTO dim_vendor_id (id, vendor)
+INSERT INTO capstone_de.group_3_schema.dim_vendor_id (id, vendor)
 VALUES
 (1, 'Creative Mobile Technologies, LLC'),
 (2, 'VeriFone Inc.');
