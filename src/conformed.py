@@ -2,8 +2,24 @@
 create the conformed data
 """
 from configparser import ConfigParser
+from types import FunctionType
+import time
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth
+
+
+def timefunc(f: FunctionType):
+    """
+    wrapper func for timing functions
+    """
+    def timed(*args, **kwargs):
+        time_start = time.time()
+        results = f(*args, **kwargs)
+        time_end = time.time()
+        total_time = time_end - time_start
+        print(f"function:{f.__name__} with args: {args}, {kwargs} took: {total_time}")
+        return results
+    return timed
 
 
 def read_aws_creds(path="aws.cfg") -> tuple[str, str]:
@@ -17,6 +33,7 @@ def read_aws_creds(path="aws.cfg") -> tuple[str, str]:
     return aws_access_key, aws_secret_key
 
 
+@timefunc
 def create_spark_session(name: str) -> SparkSession:
     """
     create a spark session
@@ -31,6 +48,7 @@ def create_spark_session(name: str) -> SparkSession:
     return spark
 
 
+@timefunc
 def read_df(session: SparkSession, url: str) -> DataFrame:
     """
     read data into a spark dataframe
@@ -40,6 +58,7 @@ def read_df(session: SparkSession, url: str) -> DataFrame:
     return df
 
 
+@timefunc
 def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     write a spark df to the target url
@@ -57,6 +76,7 @@ YELLOW_TAXI_URL = f"{RAW_BUCKET}/yellow_taxi/*.parquet"
 sess = create_spark_session("S3 Conformed")
 
 
+@timefunc
 def process_yellow_taxi() -> DataFrame:
     """
     process the yellow taxi data
@@ -83,6 +103,7 @@ def process_yellow_taxi() -> DataFrame:
     return yellow_taxi_df
 
 
+@timefunc
 def process_green_taxi() -> DataFrame:
     """
     process the green taxi data
@@ -108,6 +129,16 @@ def process_green_taxi() -> DataFrame:
     return green_taxi_df
 
 
+@timefunc
+def combine_yellow_green(y: DataFrame, g: DataFrame) -> DataFrame:
+    """
+    combine yellow and green
+    """
+    g_r = g.select(y.columns)  # cheap way of reordering cols
+    return y.union(g_r)
+
+
+@timefunc
 def process_hvfhv() -> DataFrame:
     """
     process the hvfhv data
@@ -134,8 +165,7 @@ def process_hvfhv() -> DataFrame:
 if __name__ == '__main__':
     yellow = process_yellow_taxi()
     green = process_green_taxi()
-    green_reorder = green.select(*yellow.columns) # cheap way of reordering cols
-    yellow_green = yellow.union(green)
+    yellow_green = combine_yellow_green(yellow, green)
     write_df(yellow_green, f"{CONFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
 
     hvfhv = process_hvfhv()
