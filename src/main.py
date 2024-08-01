@@ -1,3 +1,4 @@
+# %pip install snowflake-connector-python # run this to install the snowflake connector in databricks
 """
 the entire end to end pipeline configured for a databricks notebook
 """
