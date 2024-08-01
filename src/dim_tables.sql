@@ -1,3 +1,5 @@
+USE DATABASE capstone_de;
+USE SCHEMA group_3_schema;
 -- Dim tables
 CREATE TABLE dim_ratecode (
     id INT,
