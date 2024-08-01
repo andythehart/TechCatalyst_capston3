@@ -95,7 +95,7 @@ def process_hvfhv() -> DataFrame:
 
 if __name__ == '__main__':
     yg_transformed = process_yellow_green()
-    write_df(yg_transformed, f"{TRANSFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
+    write_df(yg_transformed, f"{TRANSFORMED_BUCKET}/yellow_green", [])
 
     hvfhv = process_hvfhv()
-    write_df(hvfhv, f"{TRANSFORMED_BUCKET}/hvfhv", ["year", "month", "day_of_month"])
+    write_df(hvfhv, f"{TRANSFORMED_BUCKET}/hvfhv", [])
