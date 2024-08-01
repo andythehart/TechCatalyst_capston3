@@ -1,7 +1,7 @@
 USE DATABASE capstone_de;
 USE SCHEMA capstone_de.group_3_schema;
 
-CREATE TABLE capstone_dw.group_3_schema.fact_green_yellow (
+CREATE TABLE capstone_de.group_3_schema.fact_green_yellow (
     VendorID INT,
     pickup_datetime DATETIME,
     dropoff_datetime DATETIME,
@@ -36,13 +36,13 @@ CREATE TABLE capstone_dw.group_3_schema.fact_green_yellow (
     trip_type FLOAT
 );
 
-CREATE TABLE capstone_dw.group_3_schema.fact_hvhfv (
+CREATE TABLE capstone_de.group_3_schema.fact_hvhfv (
 -- todo?
 );
 
 -- Dim tables
 CREATE TABLE capstone_de.group_3_schema.dim_hvfhs_license_num (
-    id VARCHAR
+    id VARCHAR,
     licensee VARCHAR
 );
 INSERT INTO capstone_de.group_3_schema.dim_hvfhs_license_num
