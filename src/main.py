@@ -6,13 +6,17 @@ from configparser import ConfigParser
 from types import FunctionType
 import time
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth, date_format
+from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth, date_format, avg
 import snowflake.connector
 from snowflake.connector import SnowflakeConnection
 import logging
+import logging.config
+logging.config.dictConfig({'disable_existing_loggers': True})
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='log_file.log', encoding='utf-8', level=logging.INFO)
 # ****************************************************** User defined variables
+ENVIRONMENT = "dev"  # or "prod"
+
 AWS_ACCESS_KEY = ""
 AWS_SECRET_KEY = ""
 
@@ -97,6 +101,7 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     logger.info(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
+
 
 @timefunc
 def create_snowflake_connection(user: str, password: str, acct: str, warehouse: str, db: str, schema: str, role: str) -> SnowflakeConnection:
@@ -206,17 +211,31 @@ def combine_yellow_green(y: DataFrame, g: DataFrame) -> DataFrame:
 
 
 @timefunc
-def process_yellow_green(sess: SparkSession) -> DataFrame:
+def process_yellow_green(sess: SparkSession) -> [DataFrame, DataFrame]:
     """
-    process conformed yellow/green
+    process conformed yellow/green and produce outliers report
     """
     yg_df = read_df(sess, YELLOW_GREEN_URL)
-    return yg_df
+
+    # a fare amount of >150 is considered a flag for fraud
+    outliers_report = yg_df.filter(col("fare_amount") > 150 or col("trip_distance") >= 60)
+
+    # filter outlier trip distances: 60 is the 99.99 percentile
+    yg_df = yg_df.filter(col("trip_distance") < 60)
+    # we replace 0 valued distance with the average distance per business request
+    average_distance = yg_df.filter(col("trip_distance") != 0).agg(avg(col("trip_distance"))).collect()[0][0]
+    yg_df = yg_df.withColumn("trip_distance", when(col("trip_distance") == 0, average_distance).otherwise(col("age"))) \
+        .withColumn("passenger_count", when(col("passenger_count") == 0 or col("passenger_count").isNull(), lit(1)).otherwise(col("passenger_count")))
+    return yg_df, outliers_report
 
 
 @timefunc
 def main():
-    logger.info("********** Start Job ***********")
+    if ENVIRONMENT != "dev" or ENVIRONMENT != "prod":
+        logger.info("must specify environment either dev or prod")
+        return
+
+    logger.info(f"********** Start Job in {ENVIRONMENT} ***********")
     spark_sess = create_spark_session("End to End")
     snow_conn = create_snowflake_connection(SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DB, SNOWFLAKE_SCHEMA, SNOWFLAKE_ROLE)
 
@@ -227,23 +246,41 @@ def main():
     write_df(yellow_green, f"{CONFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
 
     # transformed step
-    yg_transformed = process_yellow_green(spark_sess)
+    yg_transformed, outliers_report = process_yellow_green(spark_sess)
     write_df(yg_transformed, f"{TRANSFORMED_BUCKET}/yellow_green", [])
+    write_df(outliers_report, f"{TRANSFORMED_BUCKET}/outlier_report", [])
 
     # All data is now in the transformed bucket; time to move it to snowflake
-    # this script assumes the tables already exist
+    # this script assumes the tables/stages already exist
 
     # clean the table
-    run_sql(snow_conn, "TRUNCATE TABLE capstone_de.group_3_schema.fact_green_yellow")
+    base = "capstone_de.group_3_schema"
+    if ENVIRONMENT == "dev":
+        fact_tbl = f"{base}.dev_fact_green_yellow"
+        outlier_tbl = f"{base}.dev_outliers_report"
+    else:  # prod mode
+        fact_tbl = f"{base}.fact_green_yellow"
+        outlier_tbl = f"{base}.outliers_report"
+
+    # clean out the old data
+    run_sql(snow_conn, f"TRUNCATE TABLE {fact_tbl}")
+    run_sql(snow_conn, f"TRUNCATE TABLE {outlier_tbl}")
 
     # the copy into
-    sql = """COPY INTO capstone_de.group_3_schema.fact_green_yellow
+    sql = f"""COPY INTO {fact_tbl}
     FROM @capstone_de.group_3_schema.group_3_S3_stage_yellow_green
     ON_ERROR='CONTINUE'
     MATCH_BY_COLUMN_NAME='CASE_INSENSITIVE';
     """
     copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
-    logger.info("********** Finish Job ***********")
+
+    sql = f"""COPY INTO {outlier_tbl}
+    FROM @capstone_de.group_3_schema.group_3_S3_stage_outlier_report
+    ON_ERROR='CONTINUE'
+    MATCH_BY_COLUMN_NAME='CASE_INSENSITIVE';
+    """
+    copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    logger.info(f"********** Finish Job in {ENVIRONMENT} ***********")
 
 
 if __name__ == '__main__':
