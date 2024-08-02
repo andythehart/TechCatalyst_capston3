@@ -11,7 +11,7 @@ import snowflake.connector
 from snowflake.connector import SnowflakeConnection
 import logging
 import logging.config
-logging.config.dictConfig({'disable_existing_loggers': True})
+logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True})
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='log_file.log', encoding='utf-8', level=logging.INFO)
 # ****************************************************** User defined variables
@@ -218,20 +218,20 @@ def process_yellow_green(sess: SparkSession) -> [DataFrame, DataFrame]:
     yg_df = read_df(sess, YELLOW_GREEN_URL)
 
     # a fare amount of >150 is considered a flag for fraud
-    outliers_report = yg_df.filter(col("fare_amount") > 150 or col("trip_distance") >= 60)
+    outliers_report = yg_df.filter((col("fare_amount") > 150) | (col("trip_distance") >= 60))
 
     # filter outlier trip distances: 60 is the 99.99 percentile
     yg_df = yg_df.filter(col("trip_distance") < 60)
     # we replace 0 valued distance with the average distance per business request
     average_distance = yg_df.filter(col("trip_distance") != 0).agg(avg(col("trip_distance"))).collect()[0][0]
-    yg_df = yg_df.withColumn("trip_distance", when(col("trip_distance") == 0, average_distance).otherwise(col("age"))) \
-        .withColumn("passenger_count", when(col("passenger_count") == 0 or col("passenger_count").isNull(), lit(1)).otherwise(col("passenger_count")))
+    yg_df = yg_df.withColumn("trip_distance", when(col("trip_distance") == 0, average_distance).otherwise(col("trip_distance"))) \
+        .withColumn("passenger_count", when((col("passenger_count") == 0) | (col("passenger_count").isNull()), lit(1)).otherwise(col("passenger_count")))
     return yg_df, outliers_report
 
 
 @timefunc
 def main():
-    if ENVIRONMENT != "dev" or ENVIRONMENT != "prod":
+    if ENVIRONMENT != "dev" and ENVIRONMENT != "prod":
         logger.info("must specify environment either dev or prod")
         return
 
