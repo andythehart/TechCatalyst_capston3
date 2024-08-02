@@ -33,6 +33,7 @@ FROM fact_green_yellow;
 | AVERAGE | MEDIAN | Q1	| Q2 | Q3 | Q80 | Q95 | Q99 | Q995 | Q999 | Q9999 | Q99999 |
 | ------- | ------ | -- | -- | -- | --- | --- | --- | ---- | ---- | ----- | ------ |
 | 4.56  |	1.73   | 1  |1.73|3.3|4.08|13.97  |	20| 21.69 | 29.6 | 58.3	  | 43953.7 |
+
 Clearly, something goes wrong at the upper end.
 
 Using the 9999th percentile
