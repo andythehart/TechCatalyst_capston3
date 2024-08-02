@@ -633,3 +633,90 @@ ORDER BY discrete_col;
 | 2         | 20141     |
 | null      | 31282     |
 
+
+## Code
+The queries for the above tables are as follows:
+```sql
+-- data distribution
+-- compute metrics for each column
+SELECT passenger_count, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY passenger_count
+ORDER BY passenger_count;
+
+SELECT ratecodeid, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY ratecodeid
+ORDER BY ratecodeid;
+
+SELECT store_and_fwd_flag, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY store_and_fwd_flag
+ORDER BY store_and_fwd_flag;
+
+SELECT pulocationid, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY pulocationid
+ORDER BY pulocationid;
+
+SELECT dolocationid, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY dolocationid
+ORDER BY dolocationid;
+
+SELECT payment_type, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY payment_type
+ORDER BY payment_type;
+
+SELECT taxi_type, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY taxi_type
+ORDER BY taxi_type;
+
+SELECT month, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY month
+ORDER BY month;
+
+SELECT trip_type, COUNT(*) as frequency
+FROM fact_green_yellow
+GROUP BY trip_type
+ORDER BY trip_type;
+
+SELECT 'trip_distance' as col_name, AVG(trip_distance) as avg, STDDEV(trip_distance) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'fare_amount' as col_name, AVG(fare_amount), STDDEV(fare_amount) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'extra', AVG(extra), STDDEV(extra) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'mta_tax', AVG(mta_tax), STDDEV(mta_tax) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'tip_amount', AVG(tip_amount), STDDEV(tip_amount) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'tolls_amount', AVG(tolls_amount), STDDEV(tolls_amount) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'improvement_surcharge',AVG(improvement_surcharge), STDDEV(improvement_surcharge) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'total_amount', AVG(total_amount), STDDEV(total_amount) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'congestion_surcharge', AVG(congestion_surcharge), STDDEV(congestion_surcharge) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'airport_fee', AVG(airport_fee), STDDEV(airport_fee) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'trip_duration', AVG(trip_duration), STDDEV(trip_duration) as standard_deviation
+FROM fact_green_yellow
+UNION ALL
+SELECT 'average_speed', AVG(average_speed), STDDEV(average_speed) as standard_deviation
+FROM fact_green_yellow;
+```
