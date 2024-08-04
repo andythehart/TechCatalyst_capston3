@@ -1,7 +1,18 @@
 USE DATABASE capstone_de;
 USE SCHEMA capstone_de.group_3_schema;
 
-CREATE TABLE capstone_de.group_3_schema.fact_green_yellow (
+CREATE TABLE CAPSTONE_DE.GROUP_3_SCHEMA.CRASH_DATA (
+	CRASH_DATE DATE,
+	CRASH_TIME VARCHAR(16777216),
+	BOROUGH VARCHAR(16777216),
+	ZIP_CODE NUMBER(38,0),
+	LATITUDE VARCHAR(16777216),
+	LONGITUDE VARCHAR(16777216),
+	COLLISION_ID NUMBER(38,0)
+);
+
+-- we create "dev" and "prod" environments
+CREATE TABLE capstone_de.group_3_schema.dev_outliers_report (
     VendorID INT,
     pickup_datetime DATETIME,
     dropoff_datetime DATETIME,
@@ -36,8 +47,109 @@ CREATE TABLE capstone_de.group_3_schema.fact_green_yellow (
     trip_type FLOAT
 );
 
-CREATE TABLE capstone_de.group_3_schema.fact_hvhfv (
--- todo?
+CREATE TABLE capstone_de.group_3_schema.outliers_report (
+    VendorID INT,
+    pickup_datetime DATETIME,
+    dropoff_datetime DATETIME,
+    passenger_count FLOAT,
+    trip_distance FLOAT,
+    RatecodeID FLOAT,
+    store_and_fwd_flag VARCHAR,
+    PULocationID INT,
+    DOLocationID INT,
+    payment_type FLOAT,
+    fare_amount FLOAT,
+    extra FLOAT,
+    mta_tax FLOAT,
+    tip_amount FLOAT,
+    tolls_amount FLOAT,
+    improvement_surcharge FLOAT,
+    total_amount FLOAT,
+    congestion_surcharge FLOAT,
+    Airport_fee FLOAT,
+    taxi_type VARCHAR,
+    trip_duration FLOAT,
+    average_speed FLOAT,
+    month INT,
+    time VARCHAR,
+    hour VARCHAR,
+    timeofday VARCHAR,
+    day_of_month INT,
+    year INT,
+    day_of_week VARCHAR,
+    is_weekend BOOLEAN,
+    ehail_fee FLOAT,
+    trip_type FLOAT
+);
+
+CREATE TABLE capstone_de.group_3_schema.dev_fact_green_yellow (
+    VendorID INT,
+    pickup_datetime DATETIME,
+    dropoff_datetime DATETIME,
+    passenger_count FLOAT,
+    trip_distance FLOAT,
+    RatecodeID FLOAT,
+    store_and_fwd_flag VARCHAR,
+    PULocationID INT,
+    DOLocationID INT,
+    payment_type FLOAT,
+    fare_amount FLOAT,
+    extra FLOAT,
+    mta_tax FLOAT,
+    tip_amount FLOAT,
+    tolls_amount FLOAT,
+    improvement_surcharge FLOAT,
+    total_amount FLOAT,
+    congestion_surcharge FLOAT,
+    Airport_fee FLOAT,
+    taxi_type VARCHAR,
+    trip_duration FLOAT,
+    average_speed FLOAT,
+    month INT,
+    time VARCHAR,
+    hour VARCHAR,
+    timeofday VARCHAR,
+    day_of_month INT,
+    year INT,
+    day_of_week VARCHAR,
+    is_weekend BOOLEAN,
+    ehail_fee FLOAT,
+    trip_type FLOAT
+);
+
+CREATE TABLE capstone_de.group_3_schema.fact_green_yellow (
+    VendorID INT,
+    pickup_datetime DATETIME,
+    dropoff_datetime DATETIME,
+    passenger_count FLOAT,
+    trip_distance FLOAT,
+    RatecodeID FLOAT,
+    store_and_fwd_flag VARCHAR,
+    PULocationID INT,
+    DOLocationID INT,
+    payment_type FLOAT,
+    fare_amount FLOAT,
+    extra FLOAT,
+    mta_tax FLOAT,
+    tip_amount FLOAT,
+    tolls_amount FLOAT,
+    improvement_surcharge FLOAT,
+    total_amount FLOAT,
+    congestion_surcharge FLOAT,
+    Airport_fee FLOAT,
+    taxi_type VARCHAR,
+    trip_duration FLOAT,
+    average_speed FLOAT,
+    month INT,
+    time VARCHAR,
+    hour VARCHAR,
+    timeofday VARCHAR,
+    day_of_month INT,
+    year INT,
+    day_of_week VARCHAR,
+    is_weekend BOOLEAN,
+    ehail_fee FLOAT,
+    trip_type FLOAT
 );
 
 -- Dim tables
