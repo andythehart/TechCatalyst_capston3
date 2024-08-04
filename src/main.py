@@ -7,13 +7,13 @@ from types import FunctionType
 import time
 import logging
 import logging.config
-from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import SparkSession, DataFrame, Row
 from pyspark.sql.functions import col, when, year, month, unix_timestamp, lit, dayofmonth, date_format, avg
 import snowflake.connector
 from snowflake.connector import SnowflakeConnection
 logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True})
 logger = logging.getLogger(__name__)
-# ****************************************************** User defined variables
+# ****************************************************** User defined variables - must set these before running
 ENVIRONMENT = "dev"  # or "prod"
 
 AWS_ACCESS_KEY = ""
@@ -112,8 +112,11 @@ def write_file(session: SparkSession, file_path: str, target_url: str):
     """
     write a file in text form
     """
-    log = session.read.text(file_path)
-    write_df(log, target_url, [])
+    with open(file_path, 'r') as f:
+        txt = f.read()
+        rdd = session.sparkContext.parallelize(txt.split('\n'))
+        df = rdd.map(lambda line: Row(value=line)).toDF().repartition(1)
+        df.write.mode("overwrite").text(target_url)
 
 
 @timefunc
