@@ -5,15 +5,14 @@ the entire end to end pipeline configured for a databricks notebook
 from configparser import ConfigParser
 from types import FunctionType
 import time
-from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import col, when, year, month, dayofweek, unix_timestamp, lit, dayofmonth, date_format, avg
-import snowflake.connector
-from snowflake.connector import SnowflakeConnection
 import logging
 import logging.config
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import col, when, year, month, unix_timestamp, lit, dayofmonth, date_format, avg
+import snowflake.connector
+from snowflake.connector import SnowflakeConnection
 logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True})
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='log_file.log', encoding='utf-8', level=logging.INFO)
 # ****************************************************** User defined variables
 ENVIRONMENT = "dev"  # or "prod"
 
@@ -27,6 +26,11 @@ SNOWFLAKE_ACCT = ""
 SNOWFLAKE_WAREHOUSE = ""
 SNOWFLAKE_DB = ""
 SNOWFLAKE_SCHEMA = ""
+
+# ************************************************************ Setup logger
+LOG_FILE_NAME = f"run_{ENVIRONMENT}_{time.time()}.log"
+logging.basicConfig(filename=LOG_FILE_NAME, encoding='utf-8', level=logging.INFO)
+
 # ************************************************************ Constants
 RAW_BUCKET = "s3a://capstone-techcatalyst-raw"
 CONFORMED_BUCKET = "s3a://capstone-techcatalyst-conformed/group_3"
@@ -101,6 +105,15 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     logger.info(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
+
+
+@timefunc
+def write_file(session: SparkSession, file_path: str, target_url: str):
+    """
+    write a file in text form
+    """
+    log = session.read.text(file_path)
+    write_df(log, target_url, [])
 
 
 @timefunc
@@ -281,6 +294,8 @@ def main():
     """
     copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
     logger.info(f"********** Finish Job in {ENVIRONMENT} ***********")
+    print("writing log...")
+    write_file(spark_sess, LOG_FILE_NAME, f"{TRANSFORMED_BUCKET}/logs/{LOG_FILE_NAME}")
 
 
 if __name__ == '__main__':
