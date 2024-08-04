@@ -297,9 +297,12 @@ def main():
     """
     copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
     logger.info(f"********** Finish Job in {ENVIRONMENT} ***********")
-    print("writing log...")
-    write_file(spark_sess, LOG_FILE_NAME, f"{TRANSFORMED_BUCKET}/logs/{LOG_FILE_NAME}")
 
 
 if __name__ == '__main__':
     main()
+    # write the log after main runs to get the timing information for main
+    log_session = create_spark_session("write log")
+    print("writing log...")
+    write_file(log_session, LOG_FILE_NAME, f"{TRANSFORMED_BUCKET}/logs/{LOG_FILE_NAME}")
+
