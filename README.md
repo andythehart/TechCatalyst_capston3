@@ -1,3 +1,6 @@
+
+![alt text](https://media.giphy.com/media/10ub3b5xW3NfDG/giphy.gif)
+
 # Group_3 Mission_Statemnt: Make You Money, Save You Money
 
 ## This project is to use TLC Trip Record to Implement Dynamic Pricing Strategies For a Taxi Fleet Company
