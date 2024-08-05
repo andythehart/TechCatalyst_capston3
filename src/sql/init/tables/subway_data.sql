@@ -1,0 +1,22 @@
+CREATE OR REPLACE TABLE CAPSTONE_DE.GROUP_3_SCHEMA.SUBWAY_DATA (
+	Division VARCHAR,
+	Line VARCHAR,
+	Borough VARCHAR,
+	"Station Name" VARCHAR,
+	"Station Latitude" NUMBER(38,10),
+	"Station Longitude" NUMBER(38,10),
+	"Daytime Routes" VARCHAR,
+    "Entrance Type" VARCHAR,
+    Entry VARCHAR,
+    "Exit Only" VARCHAR,
+    Vending VARCHAR,
+    Staffing VARCHAR,
+    "Staff Hours" VARCHAR,
+    "North South Street" VARCHAR,
+    "East West Street" VARCHAR,
+    Corner VARCHAR,
+    "Entrance Latitude" NUMBER(38,10),
+	"Entrance Longitude" NUMBER(38,10),
+    entrance_georeference VARCHAR,
+    station_georeference VARCHAR
+);

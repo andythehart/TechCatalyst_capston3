@@ -1,9 +1,13 @@
 # %pip install snowflake-connector-python # run this to install the snowflake connector in databricks
 """
-the entire end to end pipeline configured for a databricks notebook
+the entire end to end pipeline configured for a databricks notebook.
+
+databricks CE makes it very difficult to import custom python modules, so we opted for one large file to run the job.
+
+note that databricks does not come with snowflake-connector-python installed. You will have ito install it yourself.
 """
 from configparser import ConfigParser
-from types import FunctionType
+from typing import Callable, Any, Dict
 import time
 import logging
 import logging.config
@@ -42,11 +46,11 @@ YELLOW_GREEN_URL = f"{CONFORMED_BUCKET}/yellow_green"
 
 
 # ************************************************************ Helper Functions
-def timefunc(f: FunctionType):
+def timefunc(f: Callable[..., Any]) -> Callable[..., Any]:
     """
     wrapper func for timing functions
     """
-    def timed(*args, **kwargs):
+    def timed(*args: Any, **kwargs: Any) -> Any:
         time_start = time.time()
         results = f(*args, **kwargs)
         time_end = time.time()
@@ -56,7 +60,7 @@ def timefunc(f: FunctionType):
     return timed
 
 
-def read_aws_creds(path="") -> tuple[str, str]:
+def read_aws_creds(path: str = "") -> tuple[str, str]:
     """
     read in the aws credentials
     """
@@ -99,7 +103,7 @@ def read_df(session: SparkSession, url: str) -> DataFrame:
 
 
 @timefunc
-def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
+def write_df(df: DataFrame, target_url: str, partition_by: list[str]) -> None:
     """
     write a spark df to the target url
     """
@@ -108,7 +112,7 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
 
 
 @timefunc
-def write_file(session: SparkSession, file_path: str, target_url: str):
+def write_file(session: SparkSession, file_path: str, target_url: str) -> None:
     """
     write a file in text form
     """
@@ -137,16 +141,16 @@ def create_snowflake_connection(user: str, password: str, acct: str, warehouse: 
 
 
 @timefunc
-def run_sql(conn: SnowflakeConnection, sql: str):
+def run_sql(conn: SnowflakeConnection, sql: str) -> None:
     """
-    run a sql statement
+    run a sql statement and return nothing
     """
     logger.info("running sql: " + sql)
     conn.cursor().execute(sql)
 
 
 @timefunc
-def copy_into(conn: SnowflakeConnection, sql: str, aws_access_key: str, aws_secret_key: str):
+def copy_into(conn: SnowflakeConnection, sql: str, aws_access_key: str, aws_secret_key: str) -> None:
     """
     run copy into command
     """
@@ -227,7 +231,7 @@ def combine_yellow_green(y: DataFrame, g: DataFrame) -> DataFrame:
 
 
 @timefunc
-def process_yellow_green(sess: SparkSession) -> [DataFrame, DataFrame]:
+def process_yellow_green(sess: SparkSession) -> tuple[DataFrame, DataFrame]:
     """
     process conformed yellow/green and produce outliers report
     """
@@ -246,7 +250,7 @@ def process_yellow_green(sess: SparkSession) -> [DataFrame, DataFrame]:
 
 
 @timefunc
-def main():
+def main() -> None:
     if ENVIRONMENT != "dev" and ENVIRONMENT != "prod":
         logger.info("must specify environment either dev or prod")
         return
