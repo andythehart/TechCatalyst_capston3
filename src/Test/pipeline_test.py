@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-
+#### Run this in DataBricks #####
 
 spark.conf.set("fs.s3a.access.key", "")
 spark.conf.set("fs.s3a.secret.key", "")
@@ -15,6 +15,8 @@ def transform (df: DataFrame, col:"ColumnorName") -> Column:
     .withColumns({'time': date_format(col,'HH:mm:ss'),'hour': date_format(col, 'HH')})\
     .withColumn('timeofday',when(date_format(col, 'HH')<12,'Morning').when(date_format(col, 'HH').between(12,17),'Afternoon').otherwise('Evening'))
    return transform_df
+
+#### Extracting Yellow Taxi Data #####
 
 data_url = "s3://capstone-techcatalyst-raw/yellow_taxi/*"
 df = spark.read.parquet(data_url)
