@@ -64,11 +64,12 @@ def write_df(df: DataFrame, target_url: str, partition_by: list[str]):
     """
     print(f"writing dataframe to {target_url}. partitioning by: {partition_by}")
     df.write.mode("overwrite").partitionBy(partition_by).parquet(target_url)
+    return
 
 
 CONFORMED_BUCKET = "s3a://capstone-techcatalyst-conformed/group_3"
 HVFHV_URL = f"{CONFORMED_BUCKET}/hvfhv/*.parquet"
-YELLOW_GREEN_URL = f"{CONFORMED_BUCKET}/yellow_taxi/*.parquet"
+YELLOW_GREEN_URL = f"{CONFORMED_BUCKET}/yellow_green"
 TRANSFORMED_BUCKET = "s3a://capstone-techcatalyst-transformed/group_3"
 
 sess = create_spark_session("S3 Transformed")
@@ -89,12 +90,12 @@ def process_hvfhv() -> DataFrame:
     process conformed hvfhv
     """
     hvfhv_df = read_df(sess, HVFHV_URL)
-    return hvfhv_df 
+    return hvfhv_df
 
 
 if __name__ == '__main__':
     yg_transformed = process_yellow_green()
-    write_df(yg_transformed, f"{TRANSFORMED_BUCKET}/yellow_green", ["year", "month", "taxi_type"])
+    write_df(yg_transformed, f"{TRANSFORMED_BUCKET}/yellow_green", [])
 
     hvfhv = process_hvfhv()
-    write_df(hvfhv, f"{TRANSFORMED_BUCKET}/hvfhv", ["year", "month", "day_of_month"])
+    write_df(hvfhv, f"{TRANSFORMED_BUCKET}/hvfhv", [])
