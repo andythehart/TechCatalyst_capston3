@@ -11,3 +11,13 @@ COPY INTO capstone_de.group_3_schema.fact_hvhfv
 FROM @capstone_de.group_3_schema.group_3_S3_stage_hvfhv
 ON_ERROR='CONTINUE'
 MATCH_BY_COLUMN_NAME = 'CASE_INSENSITIVE';
+
+
+COPY INTO capstone_de.group_3_schema.BOROUGH_HR_PRICING
+FROM @capstone_de.group_3_schema.group_3_S3_stage_borough_pricing
+ON_ERROR='CONTINUE';
+
+COPY INTO capstone_de.group_3_schema.CRASH_DATA
+FROM @capstone_de.group_3_schema.group_3_S3_stage_crashdata
+ON_ERROR='CONTINUE'
+MATCH_BY_COLUMN_NAME = 'CASE_INSENSITIVE';

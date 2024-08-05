@@ -1,6 +1,7 @@
 USE DATABASE capstone_de;
 USE SCHEMA capstone_de.group_3_schema;
 
+-- crash data
 CREATE TABLE CAPSTONE_DE.GROUP_3_SCHEMA.CRASH_DATA (
 	CRASH_DATE DATE,
 	CRASH_TIME VARCHAR(16777216),
@@ -10,6 +11,14 @@ CREATE TABLE CAPSTONE_DE.GROUP_3_SCHEMA.CRASH_DATA (
 	LONGITUDE VARCHAR(16777216),
 	COLLISION_ID NUMBER(38,0)
 );
+
+-- borough hour pricing table 
+CREATE or replace TABLE capstone_de.group_3_schema.BOROUGH_HR_PRICING (
+    BOROUGH STRING,
+    HOUR INT,
+    AVG_COLLISION_COUNT	INT,
+    PERCENT_INCREASE FLOAT);
+
 
 -- we create "dev" and "prod" environments
 CREATE TABLE capstone_de.group_3_schema.dev_outliers_report (
