@@ -2,6 +2,13 @@
 
 This folder contains the main pipeline code as well as the sql code for the database.
 
+## Technologies
+We used the following technologies in this pipeline:
+- Snowflake
+- AWS S3
+- Tableau
+- Databricks Notebooks + Pyspark
+
 ## Analysis
 A brief analysis was performed at the beginning of the project.
 
