@@ -28,10 +28,10 @@ To achieve our mission statement for this Project we leveraged TLC Trip Record D
 - Optimizing Taxi Revenue By Supplementing the City's Other Public Transit Offerings:
     - brief over here and ask them to look at powerpoint
 
-- Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used for Dynamic Pricing as Well as Saving Feul:
+- Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used for Making Money and Saving Money:
 
-    - brief  over here and ask them to look at powerpoint
-
+    -  we solve this by utilizing route optimization which is finding th shortest, most cost-effective routes between multiple destinations, while meeting reall-world needs and business constraints. This is important because large companies like fedex, amazon, and your compitetors uber spend billions try to harness this data and build their own in house product.Lucky for us we struck gold because with just 8 months of data we are able to come with a dashboard, which we used to show the shortest trip  for picking up passangers and dropping them off and you can also see what time is most popular. All with just pure analytics. This make you money by solving deadhead problems with long trips and find the best routes to do multiple short hand rides without wasting too much navigating through traffic or trying to find passengers. This saves you money by making your rides so efficient that your drivers no longer have to waist fuel sitting idle or going through unnessary traffic. And you don't waste a lot of money on constant maintenance because the vechical is now being driven in an efficient manner.
+    
 # Technical Implementation
 
 
