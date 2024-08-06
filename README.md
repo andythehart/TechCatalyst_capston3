@@ -16,7 +16,7 @@ The group members are:
 # Overview
 To achieve our mission statement for this Project we leveraged TLC Trip Record Data by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP). This Data had Yellow and green taxi records which included fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. After cleaning and transfroming this data we gain valuable insights on : 
 - #### How To Build a Dynamic Pricing System Based on Collisions and Rides
-- #### Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used for Dynamic Pricing as Well as 
+- #### Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used To Make Money As Well As To Save Money
 - #### Optimizing Taxi Revenue By Supplementing the City's Other Public Transit Offerings
 
 
@@ -39,6 +39,7 @@ It all starts in the Src folder which contains the main pipeline code as well as
 
 ## Technologies
 We used the following technologies in this pipeline:
+- Jira
 - Snowflake
 - AWS S3
 - Tableau
@@ -182,6 +183,6 @@ copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
 ### Display of Each of The Columns and Their Descriptions
 
 ## Diagram
-![diagram](capstone-dia-Page-2.drawio.png)
+![diagram](capstone-dia-Page-6.drawio.png)
 
 
