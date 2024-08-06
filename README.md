@@ -48,7 +48,7 @@ We used the following technologies in this pipeline:
 - Databricks Notebooks + Pyspark
 
 ## Diagram
-![diagram](capstone-dia-Page-6.drawio.png)
+![diagram](diagram.JPG)
 
 ## Analysis
 A brief analysis was performed at the beginning of the project.
@@ -185,7 +185,7 @@ copy_into(snow_conn, sql, AWS_ACCESS_KEY, AWS_SECRET_KEY)
 
 6. Finally, a log file is written to S3.
 
-### Display of Each of The Columns and Their Descriptions
+
 
 
 
