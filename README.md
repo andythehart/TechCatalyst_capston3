@@ -39,7 +39,7 @@ It all starts in the Src folder which contains the main pipeline code as well as
 
 ## Technologies
 We used the following technologies in this pipeline:
-- Jira
+- [Jira](https://penfoldslaws.atlassian.net/jira/software/projects/TC/boards/2?sprintStarted=true)
 - Snowflake
 - AWS S3
 - Tableau
