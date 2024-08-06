@@ -237,6 +237,9 @@ def process_yellow_green(sess: SparkSession) -> tuple[DataFrame, DataFrame]:
     """
     yg_df = read_df(sess, YELLOW_GREEN_URL)
 
+    # filter out incorrect years
+    yg_df = yg_df.filter(col("year") > 2009)
+
     # a fare amount of >150 is considered a flag for fraud
     outliers_report = yg_df.filter((col("fare_amount") > 150) | (col("trip_distance") >= 60))
 
