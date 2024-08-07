@@ -1,31 +1,25 @@
 
 ![alt text](https://media.giphy.com/media/10ub3b5xW3NfDG/giphy.gif)
 
-# Group 3 Mission Statement: Make You Money, Save You Money
+## Group 3 Mission Statement: Make You Money, Save You Money
 
-## This project aims to use TLC Trip Records to Implement Dynamic Pricing Strategies For a NYC Taxi Corporation
-
-This is the Tech Cat Repo.
-
-The group members are:
+### This project aims to use TLC Trip Records to Implement Dynamic Pricing Strategies For a NYC Taxi Corporation
+Group 3 Team Members:
 - Joseph Cocozza
 - Ginamarie Mastrorilli
 - Jason Juncker
 - Andy Amoah Mensah
 
 # Overview
-To achieve our mission statement for this Project we leveraged TLC Trip Record Data by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP). This Data had Yellow and green taxi records which included fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. After cleaning and transfroming this data we gain valuable insights on : 
+To achieve our mission statement for this project we leveraged TLC Trip Record Data by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP). This data has yellow and green taxi records which included fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. After cleaning and transfroming this data we gain valuable insights on:
 - #### How To Build a Dynamic Pricing System Based on Collisions and Rides
-- #### Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used To Make Money As Well As To Save Money
+- #### Discovered How To Implement Sophisticated Route Optimization Procedures 
 - #### Optimizing Taxi Revenue By Supplementing the City's Other Public Transit Offerings
 
 
 # Details of How Our Strategy is Implemented
 - #### How To Build a Dynamic Pricing System Based on Collisions and Rides:
 
-    -   This set of dashboards allows users of NYC Taxi Corporaton to identify peak rider demand times in collison hot spots to implement a dynamic pricing strategy. The dashboards aim to aid in maximizing revenue and incentivze riders to travel during low-risk hours. The first visualization is the average ride count by day of week and time of day. The user can identify the most popular and least popular demand times for NYC Taxi Corporation. The next visualization is the count of collisions by borough. The user can see an overview of which boroughs have the highest proportion of collisions. Next, the user can see summary statistics for each Borough such as average fare amount and average trip distance. This allows users to see if any Borough is not reaching the benchmark for any area. The next visualizaition is a map of collisions in NYC based on Zip Code. This map can be filtered by Borough and Day of Week. In the second dashboard of this set, the user can see the ride count during each hour of the day, filtered by Borough and Day of Week. This visualization can then be compared to the collisions by hour bar chart which identifys which hours of the day have the highest collision count. Both of these charts can be filtered by Borough and Day of Week to have a deeper level of granualarity in their analysis. Finally, based on the analysis of all of the previous visualizations, the user can implement dynamic pricing by following the last visualization. This shows, for each borough, at which hour how much pricing should increase.
-
-- #### Optimizing Taxi Revenue By Supplementing the City's Other Public Transit Offerings:
     - brief over here and ask them to look at powerpoint
 
 - #### Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used for Making Money and Saving Money:
