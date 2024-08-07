@@ -44,7 +44,7 @@ Our team used the following technologies in this pipeline:
 - Databricks Notebooks + Pyspark
 
 ## Reference Architecture Diagram
-![diagram](architecture_diagram.png)
+![diagram](diagram.png)
 
 ## Analysis
 A brief analysis was performed at the beginning of the project.
