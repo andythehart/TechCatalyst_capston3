@@ -20,19 +20,23 @@ To achieve our mission statement for this project we leveraged TLC Trip Record D
 # Details of How Our Strategy is Implemented
 - #### How To Build a Dynamic Pricing System Based on Collisions and Rides:
 
-    - brief over here and ask them to look at powerpoint
+    - This set of dashboards allows users of NYC Taxi Corporation to identify peak rider demand times in collision hot spots to implement a dynamic pricing strategy. The dashboards aim to aid in maximizing revenue and incentivize riders to travel during low-risk hours. The first visualization is the average ride count by day of week and time of day. The user can identify the most popular and least popular demand times for NYC Taxi Corporation. The next visualization is the count of collisions by borough. The user can see an overview of which boroughs have the highest proportion of collisions. Next, the user can see summary statistics for each Borough such as average fare amount and average trip distance. This allows users to see if any Borough is not reaching the benchmark for any area. The next visualization is a map of collisions in NYC based on Zip Code. This map can be filtered by Borough and Day of Week. 
+        
+    - In the second dashboard of this set, the user can see the ride count during each hour of the day, filtered by Borough and Day of Week. This visualization can then be compared to the collisions by hour bar chart which identifies which hours of the day have the highest collision count. Both of these charts can be filtered by Borough and Day of Week to have a deeper level of granularity in their analysis. Finally, based on the analysis of all of the previous visualizations, the user can implement dynamic pricing by following the last visualization. This shows, for each borough, at which hour how much pricing should increase.
 
-- #### Discovered How To Implement Sophisticated Route Optimization Procedures That Can Be Used for Making Money and Saving Money:
+- #### Discovered How To Implement Sophisticated Route Optimization Procedures:
 
-    -  we solve this by utilizing route optimization which is finding th shortest, most cost-effective routes between multiple destinations, while meeting reall-world needs and business constraints. This is important because large companies like fedex, amazon, and your compitetors uber spend billions try to harness this data and build their own in house product.Lucky for us we struck gold because with just 8 months of data we are able to come with a dashboard, which we used to show the shortest trip  for picking up passangers and dropping them off and you can also see what time is most popular. All with just pure analytics. This make you money by solving deadhead problems with long trips and find the best routes to do multiple short hand rides without wasting too much navigating through traffic or trying to find passengers. This saves you money by making your rides so efficient that your drivers no longer have to waist fuel sitting idle or going through unnessary traffic. And you don't waste a lot of money on constant maintenance because the vechical is now being driven in an efficient manner.
+    - We implemented this solution by utilizing route optimization which is finding the shortest, most cost-effective routes between multiple destinations, while meeting real-world needs and business constraints. This is important because large companies like FedEx, amazon, and your competitors uber spend billions try to harness this data and build their own in house product. Lucky for us we struck gold because with just 8 months of data we are able to come with a dashboard, which we used to show the shortest trip  for picking up passengers and dropping them off and you can also see what time is most popular. All with just pure analytics. This make you money by solving deadhead problems with long trips and find the best routes to do multiple short hand rides without wasting too much navigating through traffic or trying to find passengers. This saves you money by making your rides so efficient that your drivers no longer have to waist fuel sitting idle or going through unnecessary traffic. And you don't waste a lot of money on constant maintenance because the vehicle is now being driven in an efficient manner.
+
+- #### Optimizing Taxi Revenue By Supplementing the City's Other Public Transit Offerings
     
 # Technical Implementation
 
 
-It all starts in the Src folder which contains the main pipeline code as well as the sql code for the database.
+It all starts in the Src folder which contains the main pipeline code as well as the SQL code for the database.
 
 ## Technologies
-We used the following technologies in this pipeline:
+Our team used the following technologies in this pipeline:
 - [Jira](https://penfoldslaws.atlassian.net/jira/software/projects/TC/boards/2?sprintStarted=true)
 - Snowflake
 - AWS S3
@@ -45,7 +49,7 @@ We used the following technologies in this pipeline:
 ## Analysis
 A brief analysis was performed at the beginning of the project.
 
-The details are provided in markdown files in that folder.
+The details are provided in markdown files in the analysis folder.
 
 ## SQL
 The sql folder contains the code necessary to replicate the schema of the data warehouse in full.
