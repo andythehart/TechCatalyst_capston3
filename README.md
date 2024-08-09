@@ -48,6 +48,11 @@ Our team used the following technologies in this pipeline:
 ## Reference Architecture Diagram
 ![diagram](diagram.png)
 
+## Web Server/NY Taxi Pseudo Record Generation
+The code for our "app" proof of concept can be found at this [repo](https://github.com/jcocozza/ny_taxi_pseudo_gen).
+
+It contains a simple web server, code for connecting to our snowflake tables, and will generate pseudo records based on the statistical distribution of the existing taxi data. 
+
 ## Analysis
 A brief analysis was performed at the beginning of the project.
 
